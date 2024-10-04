@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleDisplayName</key>
+	<string>Hot Dog</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -25,7 +27,6 @@
 	<array>
 		<string>location</string>
 	</array>
-	<!-- Location permission description for the user -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to provide weather updates for walking your dog.</string>
 </dict>
