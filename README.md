@@ -42,9 +42,6 @@ Once you have the app installed, simply run it, allow location permissions, and 
 - If the temperature is safe, you'll see a walking dog animation. 🐕
 - If it's too hot, you'll see a dog drinking water, indicating it's too hot for a walk. 🌡️
 
-## Screenshots
-![Safe to Walk](https://your-image-link-here.png)
-![Too Hot](https://your-image-link-here.png)
 
 ## License
 This project is licensed under the MIT License.
