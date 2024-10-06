@@ -116,6 +116,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // Update the temperature label, show/hide the tick/cross icons, and play the correct animation
     func updateTemperatureDisplay(temp: Double) {
         
+        print("Temp" + String(temp))
+        print("Threshold" + String(tempThreshold))
+        
         tempLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 65)
         // Set the temperature in the top-right label
         tempLabel.text = "\(Int(temp))°C"
@@ -162,10 +165,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBAction func resetDogSize(_ sender: UIButton) {
         // Clear the saved dog size from UserDefaults
         UserDefaults.standard.removeObject(forKey: "dogSize")
+        
+        
 
         // Load the Dog Selection screen
         let storyboard = UIStoryboard(name: "DogSelection", bundle: nil)
         if let selectionVC = storyboard.instantiateViewController(identifier: "DogSizeViewController") as? DogSizeViewController {
+            print("navigateToDogSizeViewController")
             selectionVC.modalPresentationStyle = .fullScreen
             self.present(selectionVC, animated: true, completion: nil)
         }
