@@ -58,6 +58,7 @@ class DogSizeViewController: UIViewController {
             
             // Present the view controller
             mainVC.modalPresentationStyle = .fullScreen
+            mainVC.modalTransitionStyle = .crossDissolve
             self.present(mainVC, animated: true, completion: nil)
         } else {
             print("Failed to instantiate the Main storyboard")

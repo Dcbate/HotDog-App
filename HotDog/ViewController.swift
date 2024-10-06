@@ -166,13 +166,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // Clear the saved dog size from UserDefaults
         UserDefaults.standard.removeObject(forKey: "dogSize")
         
-        
-
         // Load the Dog Selection screen
         let storyboard = UIStoryboard(name: "DogSelection", bundle: nil)
         if let selectionVC = storyboard.instantiateViewController(identifier: "DogSizeViewController") as? DogSizeViewController {
             print("navigateToDogSizeViewController")
             selectionVC.modalPresentationStyle = .fullScreen
+            selectionVC.modalTransitionStyle = .crossDissolve
             self.present(selectionVC, animated: true, completion: nil)
         }
     }
