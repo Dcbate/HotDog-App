@@ -12,8 +12,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // Lottie animation view
     var animationView: LottieAnimationView?
 
+    // Variable to store the selected dog size
+    var selectedDogSize: String?
+
     // Core Location manager to get the user's location
     let locationManager = CLLocationManager()
+
+    // Temperature threshold for dog walking
+    var tempThreshold: Double = 30.0  // Default threshold
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +32,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         tickIcon.isHidden = true
         crossIcon.isHidden = true
 
-        // You can check the initial authorization status here if needed
+        // Adjust temperature threshold based on the selected dog size
+        adjustTemperatureThreshold()
+
+        // Check initial authorization status
         checkAuthorizationStatus(status: locationManager.authorizationStatus)
     }
 
-    // Called when the authorization status changes
+    // Adjust the temperature threshold based on the selected dog size
+    func adjustTemperatureThreshold() {
+        switch selectedDogSize {
+        case "Small":
+            tempThreshold = 25.0  // Example threshold for small dogs
+        case "Medium":
+            tempThreshold = 30.0  // Default threshold for medium dogs
+        case "Large":
+            tempThreshold = 35.0  // Example threshold for large dogs
+        default:
+            tempThreshold = 30.0  // Default threshold
+        }
+    }
+
+    // CLLocationManager Delegate: called when the authorization status changes
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let status = manager.authorizationStatus
         checkAuthorizationStatus(status: status)
@@ -97,19 +120,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // Set the temperature in the top-right label
         tempLabel.text = "\(Int(temp))°C"
 
-        // Define the temperature threshold for "too hot"
-        let hotThreshold = 30.0
-
         // Remove any existing Lottie animations
         animationView?.removeFromSuperview()
 
-        if temp >= hotThreshold {
+        // Check if the temperature is above the threshold
+        if temp >= tempThreshold {
             // It's too hot, show the cross icon and hide the tick icon
             crossIcon.isHidden = false
             tickIcon.isHidden = true
 
             // Load the "dog too hot" animation
-            animationView = LottieAnimationView(name: "dogDrinking")  // Use your Lottie file for a dog looking too hot
+            animationView = LottieAnimationView(name: "dogDrinking")
 
         } else {
             // It's safe, show the tick icon and hide the cross icon
@@ -117,8 +138,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             crossIcon.isHidden = true
 
             // Load the "dog walking" animation
-            animationView = LottieAnimationView(name: "dogWalking")  // Use your Lottie file for a dog walking
-
+            animationView = LottieAnimationView(name: "dogWalking")
         }
 
         // Set the animation view size and position
@@ -135,5 +155,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     // Handle location errors
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Failed to find user's location: \(error.localizedDescription)")
+    }
+    
+    
+    
+    @IBAction func resetDogSize(_ sender: UIButton) {
+        // Clear the saved dog size from UserDefaults
+        UserDefaults.standard.removeObject(forKey: "dogSize")
+
+        // Load the Dog Selection screen
+        let storyboard = UIStoryboard(name: "DogSelection", bundle: nil)
+        if let selectionVC = storyboard.instantiateViewController(identifier: "DogSizeViewController") as? DogSizeViewController {
+            selectionVC.modalPresentationStyle = .fullScreen
+            self.present(selectionVC, animated: true, completion: nil)
+        }
     }
 }
