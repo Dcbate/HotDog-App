@@ -45,3 +45,7 @@ fastlane/test_output
 
 # Logs
 *.log
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/HotDog-App.iml
