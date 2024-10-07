@@ -1,7 +1,9 @@
 import UIKit
 import CoreLocation
-import Lottie  // Import Lottie for animations
+import WeatherKit // Make sure WeatherKit is imported
+import Lottie
 
+@available(iOS 16.0, *)
 class ViewController: UIViewController, CLLocationManagerDelegate {
 
     // Outlet for the temperature label and tick/cross icons
@@ -20,6 +22,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
     // Temperature threshold for dog walking
     var tempThreshold: Double = 30.0  // Default threshold
+    
+    // To prevent continuous updates
+    var lastWeatherFetchTime: Date?
+
+    // Weather service
+    let weatherService = WeatherService()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +35,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // Request location permission
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+
+        // Set a distance filter to avoid too frequent updates
+        locationManager.distanceFilter = 500  // Only update location after moving 500 meters
 
         // Hide the tick and cross icons initially
         tickIcon.isHidden = true
@@ -82,43 +93,42 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             let latitude = location.coordinate.latitude
             let longitude = location.coordinate.longitude
 
-            // Fetch weather data based on the location
+            // Ensure we only fetch weather data at intervals (e.g., every 5 minutes)
+            let currentTime = Date()
+            if let lastFetch = lastWeatherFetchTime, currentTime.timeIntervalSince(lastFetch) < 300 {
+                // Less than 5 minutes since the last fetch, so skip fetching the weather
+                print("Skipping fetch, last weather fetch was less than 5 minutes ago.")
+                return
+            }
+
+            // Update the last fetch time
+            lastWeatherFetchTime = currentTime
+
+            // Fetch weather data based on the location using WeatherKit
             fetchWeather(latitude: latitude, longitude: longitude)
         }
     }
 
-    // Fetch weather data from the OpenWeatherMap API
+    // Fetch weather data using WeatherKit
     func fetchWeather(latitude: Double, longitude: Double) {
-        let apiKey = "8f1b1c0882335821b5dc24bdca2865a2"  // Your OpenWeatherMap API key
-        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)&units=metric"
+        Task {
+            do {
+                let location = CLLocation(latitude: latitude, longitude: longitude)
+                let weather = try await weatherService.weather(for: location)
 
-        if let url = URL(string: urlString) {
-            let task = URLSession.shared.dataTask(with: url) { data, response, error in
-                if let data = data {
-                    do {
-                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                           let main = json["main"] as? [String: Any],
-                           let temp = main["temp"] as? Double {
-                            // Update the UI with the temperature
-                            DispatchQueue.main.async {
-                                self.updateTemperatureDisplay(temp: temp)
-                            }
-                        }
-                    } catch {
-                        print("Error parsing weather data: \(error.localizedDescription)")
-                    }
+                // Access current weather data
+                let tempCelsius = weather.currentWeather.temperature.value
+                DispatchQueue.main.async {
+                    self.updateTemperatureDisplay(temp: tempCelsius)
                 }
+            } catch {
+                print("Error fetching weather data: \(error)")
             }
-            task.resume()
         }
     }
 
     // Update the temperature label, show/hide the tick/cross icons, and play the correct animation
     func updateTemperatureDisplay(temp: Double) {
-        
-        print("Temp" + String(temp))
-        print("Threshold" + String(tempThreshold))
-        
         tempLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 65)
         // Set the temperature in the top-right label
         tempLabel.text = "\(Int(temp))°C"
@@ -134,7 +144,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
             // Load the "dog too hot" animation
             animationView = LottieAnimationView(name: "dogDrinking")
-
         } else {
             // It's safe, show the tick icon and hide the cross icon
             tickIcon.isHidden = false
