@@ -78,6 +78,17 @@ To reset the dog size:
 
 ---
 
+## Future Features
+
+- 🕒 **Daily Reminders**: Set daily push notifications to remind you to walk your dog based on the number of walks you prefer.
+- 🌡️ **Threshold Notifications**: Get notified when the weather reaches the temperature threshold, alerting you if it’s too hot to walk your dog.
+- 🏠 **Home Screen Menu**: Add a main menu with multiple options to enhance navigation and user experience.
+- 🏅 **Achievement Circles**: Track daily walking achievements using an Apple Watch-like circle, displaying the number of walks completed or distance traveled.
+- 🐾 **Dog Walker Connections**: Connect with other local dog owners to meet up and walk your dogs together.
+- 🐕 **Dog Profile Creation**: Create a profile for your dog, including details such as breed, age, size, and preferences.
+- :) Email Feedback: An way to send emails fot fredback and future features 
+---
+
 ## Weather API
 
 The app utilizes **WeatherKit**, which requires an **Apple Developer Account** and configuration in your **App ID**.
