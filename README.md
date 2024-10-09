@@ -86,7 +86,8 @@ To reset the dog size:
 - 🏅 **Achievement Circles**: Track daily walking achievements using an Apple Watch-like circle, displaying the number of walks completed or distance traveled.
 - 🐾 **Dog Walker Connections**: Connect with other local dog owners to meet up and walk your dogs together.
 - 🐕 **Dog Profile Creation**: Create a profile for your dog, including details such as breed, age, size, and preferences.
-- :) Email Feedback: An way to send emails fot fredback and future features 
+- 👥 **Add Friends**: Add other dog profiles as friends to view their achievements and walking history, and interact with their stats.
+
 ---
 
 ## Weather API
